@@ -79,7 +79,6 @@ Router.post("/c-a", async (req,res)=>{
           } else{ 
                console.log("Correo enviado correctamente"); 
           } 
-          createTransport.close(); 
         });
 
       console.log("User validation TRUE")
@@ -165,7 +164,6 @@ transporter.sendMail(data, function (error, info) {
   } else{ 
        console.log("Correo enviado correctamente"); 
   } 
-  createTransport.close(); 
 });
 
 
@@ -464,19 +462,22 @@ Router.post("/chat/room/:token", (req,res)=>{
   if (messages === null || messages === undefined || messages === "" || messages.length > 100){return console.log("error")}
   pool.getConnection((e, con)=>{
     if (e) return console.log(e)
+
     con.query("SELECT name FROM users WHERE id = ?",id,(e,row)=>{
       if (e) return console.log(e)
       else if (row.length === 0){console.log("no users"), res.json({status: "error"})}
+      
       else {
         const userName = row[0].name
         con.query("SELECT id,messages,people FROM rooms WHERE id = ?",room, (e,row)=>{
+          
           if (row.length === 0){return console.log("Stop hacking :(")}
           
           const data = row[0].people.split(",")
 
           if (e) return console.log(e)
 
-          else if (row.length === 0 || row[0].people !== "public" && data[0] !== id && data[1] !== id){
+          else if (row.length === 0 || row[0].people !== "public," && data[0] !== id && data[1] !== id){
 
             console.log("no users"), res.json({status: "error"})
             
@@ -532,8 +533,7 @@ Router.get("/chat/room/:token", (req,res)=>{
 
        con.query("SELECT name,id,imgType FROM users WHERE id IN (?)",[noUser],(e,row)=>{
         if (e) console.log(e)
-        
-        if (row.length === 0){return console.log("error")}
+
         const permision = rows[0].people.split(",")
   
         if (permision[0] !== "public"){
