@@ -61,7 +61,7 @@ Router.post("/c-a", async (req,res)=>{
         from: 'koalakveri@gmail.com',
         to: email,
         subject: "Koala Verification",
-        html: `<p>Hi ${name} ,access this link to finish the verification process:</p><a>https://project-0-1-1.herokuapp.com/verify/${verification}</a>`
+        html: `<p>Hi ${name} ,access this link to finish the verification process:</p><a>https://koala-server.onrender.com/verify/${verification}</a>`
       }
 
       const info2 = [info.name, info.email]
@@ -182,6 +182,7 @@ Router.get("/user/:token", (req,res)=>{
     if (e) return console.log(e)
     con.query(`Select name,des,imgData,imgName,imgType,followers,following,bgcolor from users WHERE id = ? AND verification = "true"`, token, 
     (e, rows)=>{
+      
       if (e) return console.log(e)
       else if (rows.length === 0){console.log("No users"), res.json([{status: "error"}])}
       else{
@@ -190,18 +191,18 @@ Router.get("/user/:token", (req,res)=>{
       if (rows[0].followers === null || rows[0].followers === undefined ){console.log("No followers"); 
       
       if (rows[0].followers == undefined || rows[0].followers == null){
-        res.json([rows[0], color = "rgb(150,150,150)", text = "unfollow", file ])
+        res.json([rows[0], color = "rgb(150,150,150)", text = "unfollow"])
       }
-      else { res.json([rows[0], color = "", text = "follow", file])}
+      else { res.json([rows[0], color = "", text = "follow"])}
     
     }
       else{
       let array = rows[0].followers.split(",").find(e => e == user)
    
       if (array == user){
-        res.json([rows[0], color = "rgb(150,150,150)", text = "unfollow", file ])
+        res.json([rows[0], color = "rgb(150,150,150)", text = "unfollow"])
       }
-      else { res.json([rows[0], color = "", text = "follow", file])}}
+      else { res.json([rows[0], color = "", text = "follow"])}}
 
     }
     }) 
