@@ -621,9 +621,15 @@ Router.post("/chat/room/private/:id", (req,res)=>{
   })
 })
 
-/*Router.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-})*/
+Router.get("/start", (req,res)=>{
+  pool.getConnection((e,con)=>{
+    if (e) return console.log(e)
+    con.query("SELECT name FROM users WHERE id = 1", (e,row)=>{
+      if (e) return console.log(e)
+      res.json(row)
+    })
+  })
+})
 
   module.exports = Router;
 
